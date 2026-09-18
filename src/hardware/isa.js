@@ -46,9 +46,9 @@ export const OPCODES = {
     HLT: 0xFF
 }
 
-
+// Used by compiler
 export const INSTRUCTION_TABLE = {
-    
+
     'NOP': { opcode: OPCODES.NOP, bytes: 1 },
  
     // Data Movement
@@ -89,3 +89,48 @@ export const INSTRUCTION_TABLE = {
  
     'HLT': { opcode: OPCODES.HLT, bytes: 1 }
 };
+
+// used by cpu
+export const INSTRUCTION_MAP = {
+    0x00: { shape: 'NOP', bytes: 1 },
+ 
+    // Data Movement
+    0x01: { shape: 'MOV A, imm', bytes: 2 },
+    0x02: { shape: 'MOV B, imm', bytes: 2 },
+    0x03: { shape: 'MOV A, B', bytes: 1 },
+    0x04: { shape: 'MOV B, A', bytes: 1 },
+ 
+    // Memory Access
+    0x05: { shape: 'LDA addr', bytes: 2 },
+    0x06: { shape: 'STA addr', bytes: 2 },
+    0x07: { shape: 'LDB addr', bytes: 2 },
+    0x08: { shape: 'STB addr', bytes: 2 },
+ 
+    // ALU
+    0x10: { shape: 'ADD A, B', bytes: 1 },
+    0x11: { shape: 'ADD A, imm', bytes: 2 },
+    0x12: { shape: 'SUB A, B', bytes: 1 },
+    0x13: { shape: 'SUB A, imm', bytes: 2 },
+    0x14: { shape: 'INC A', bytes: 1 },
+    0x15: { shape: 'DEC A', bytes: 1 },
+    0x16: { shape: 'AND A, B', bytes: 1 },
+    0x17: { shape: 'OR A, B', bytes: 1 },
+    0x18: { shape: 'XOR A, B', bytes: 1 },
+    0x19: { shape: 'CMP A, B', bytes: 1 },
+ 
+    // Control Flow
+    0x20: { shape: 'JP addr', bytes: 2 },
+    0x21: { shape: 'JZ addr', bytes: 2 },
+    0x22: { shape: 'JNZ addr', bytes: 2 },
+    0x23: { shape: 'JC addr', bytes: 2 },
+    0x24: { shape: 'JNC addr', bytes: 2 },
+ 
+    // Stack
+    0x25: { shape: 'CALL addr', bytes: 2 },
+    0x26: { shape: 'RET', bytes: 1 },
+    0x30: { shape: 'PUSH A', bytes: 1 },
+    0x31: { shape: 'POP A', bytes: 1 },
+ 
+    0xFF: { shape: 'HLT', bytes: 1 }
+};
+ 
