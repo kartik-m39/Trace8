@@ -58,6 +58,7 @@ function first_pass(parsed_Code, tokenised_Code){
         let instruction = {
             mnemonic: '',
             operands: [],
+            isaKey: '',
             address: 0,
             row: 0
         }
@@ -73,7 +74,7 @@ function first_pass(parsed_Code, tokenised_Code){
         instruction.address = currentAddress;
         currentAddress += instructionInfo.bytes;
 
-
+        instruction.isaKey += isa_lookup_val;
         instruction.row = elements[0].row;
 
         parsed_Code.instruction_Set.push(instruction);
