@@ -1,8 +1,6 @@
 import { INSTRUCTION_TABLE } from "../hardware/isa.js";
 import { createMemory } from "../hardware/memory.js";
 
-// compile(parsed_Code)
-
 export function compile(parsed_Code){
     const memory = createMemory();
 
