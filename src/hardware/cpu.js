@@ -9,20 +9,28 @@ import { INSTRUCTION_MAP } from "./isa.js"
 
 // calls step() again and again until HLT or PC runs off the end of memory.
 // onStep is a hook for UI updates
-export function run(memory, registers, onStep){
+export function run(memory, registers){
     let halted = false;
 
     while(!halted && registers.PC < memory.length){
         halted = step(memory, registers);
 
-        if(onStep) onStep(registers, halted);
+        // if(onStep) onStep(registers, halted);
     }
 }
 
 export function step(memory, registers){
 
+    if (registers.PC >= memory.length) {
+        throw new Error(`PC (${registers.PC}) ran off the end of memory — no HLT executed`);
+    }
+
     const opcode = memory[registers.PC]
     const info = INSTRUCTION_MAP[opcode];
+
+    if (!info) {
+        throw new Error(`Unknown opcode 0x${opcode.toString(16).toUpperCase()} at PC=${registers.PC}`);
+    }
 
     if(info.shape === 'HLT'){
         return true;
