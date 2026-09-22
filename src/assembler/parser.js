@@ -53,6 +53,11 @@ function first_pass(parsed_Code, tokenised_Code){
 
         // Give each instruction its required space and then increment in memory
         const instructionInfo = INSTRUCTION_TABLE[isa_lookup_val];
+
+        if (!instructionInfo) {
+            throw new Error(`Unknown instruction "${isa_lookup_val}" on line ${elements[0].row}`);
+        }
+
         instruction.address = currentAddress;
         currentAddress += instructionInfo.bytes;
 

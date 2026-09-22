@@ -42,7 +42,12 @@ export function tokenise(sourceString){
 
         if(ch === '\n'){
             flush(token, instruction_Array, row, col);
-            tokenised_Code.push(instruction_Array);
+            // tokenised_Code.push(instruction_Array);
+            
+            // skipping blank lines
+            if (instruction_Array.length > 0) {   
+                tokenised_Code.push(instruction_Array);
+            }
 
             // clear up the trash
             instruction_Array = []; 

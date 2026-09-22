@@ -7,11 +7,12 @@ export function compile(parsed_Code){
     parsed_Code.instruction_Set.forEach(instruction => {
         
         const loopkup_Val = instruction.isaKey;
-        const instructionInfo = INSTRUCTION_TABLE[loopkup_Val];
-
+        
         if(!loopkup_Val){
             throw new Error("Unknown instruction");
         }
+        
+        const instructionInfo = INSTRUCTION_TABLE[loopkup_Val];
 
         const slot = instruction.address;
 
@@ -27,5 +28,6 @@ export function compile(parsed_Code){
 
     });
     
+    console.log(memory);
     return memory;
 }
