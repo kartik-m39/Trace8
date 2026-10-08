@@ -135,13 +135,28 @@ function execute(shape, bytes, operand, registers, memory){
             registers.flags.C = (result > 0xFF) ? 1 : 0; // overflow
             return false;
         }
-            
         
         case 'DEC A':{
             const result = registers.A - 1;
             registers.A = result & 0xFF;
             registers.flags.Z = (registers.A === 0) ? 1 : 0; 
             registers.flags.C = (result < 0) ? 1 : 0; // check underflow
+            return false;
+        }
+
+        case 'INC B': {
+            const result = registers.B + 1;
+            registers.B = result & 0xFF;
+            registers.flags.Z = (registers.B === 0) ? 1 : 0;
+            registers.flags.C = (result > 0xFF) ? 1 : 0;
+            return false;
+        }
+        
+        case 'DEC B': {
+            const result = registers.B - 1;
+            registers.B = result & 0xFF;
+            registers.flags.Z = (registers.B === 0) ? 1 : 0;
+            registers.flags.C = (result < 0) ? 1 : 0;
             return false;
         }
         

@@ -1,5 +1,11 @@
 import { INSTRUCTION_TABLE } from "../hardware/isa.js";
 
+const ADDR_MNEMONICS = new Set([
+    'LDA', 'STA', 'LDB', 'STB',
+    'JP', 'JZ', 'JNZ', 'JC', 'JNC',
+    'CALL'
+]);
+
 export function parse(tokenised_Code){
 
     let parsed_Code = {
@@ -19,8 +25,12 @@ function second_pass(parsed_Code){
     parsed_Code.instruction_Set.forEach(instruction => {
         instruction.operands.forEach(operand => {
 
-            if(operand.kind === 'addr'){
-                operand.value = parsed_Code.symbol_Table[operand.value];
+            if (operand.kind === 'addr' && typeof operand.value === 'string') {
+                const resolved = parsed_Code.symbol_Table[operand.value];
+                if (resolved === undefined) {
+                    throw new Error(`Unknown label "${operand.value}"`);
+                }
+                operand.value = resolved;
             }
         })
     })
@@ -34,7 +44,8 @@ function first_pass(parsed_Code, tokenised_Code){
         // label doesn't occupy any memory so
         if(elements[0].type === 'LABEL_DEF'){
             parsed_Code.symbol_Table[elements[0].value] = currentAddress;
-            return;
+            if (elements.length === 1) return;
+            elements = elements.slice(1);
         }
         
         let instruction = {
@@ -71,49 +82,33 @@ function first_pass(parsed_Code, tokenised_Code){
 function instruction_Flush(token, instruction){
     let isa_lookup_val = '';
 
-    if(token.type === 'MNEMONIC'){
-        
-        // Exceptional case for halt
-        if(token.value === 'HLT'){
-            instruction.mnemonic = token.value;
-            isa_lookup_val += token.value ;
-            return isa_lookup_val;
-        }
-
+    if (token.type === 'MNEMONIC') {
         instruction.mnemonic = token.value;
-        isa_lookup_val += token.value + ' ';
-    }
-
-    if(token.type === 'REGISTER'){
-        let operand = {
-            kind: 'reg',
-            value: token.value
-        }
-        instruction.operands.push(operand);
         isa_lookup_val += token.value;
     }
 
-    if(token.type === 'COMMA'){
-        isa_lookup_val += ', ';
+    if (token.type === 'REGISTER') {
+        instruction.operands.push({ kind: 'reg', value: token.value });
+        isa_lookup_val += ' ' + token.value;
     }
 
-    if(token.type === 'NUMBER'){
+    if (token.type === 'COMMA') {
+        isa_lookup_val += ',';
+    }
 
-        let operand = {
-            kind: 'imm',
+    if (token.type === 'NUMBER') {
+        const isAddr = ADDR_MNEMONICS.has(instruction.mnemonic);
+        instruction.operands.push({
+            kind: isAddr ? 'addr' : 'imm',
             value: token.value
-        }
-        instruction.operands.push(operand);
-        isa_lookup_val += 'imm';
+        });
+        isa_lookup_val += ' ' + (isAddr ? 'addr' : 'imm');
     }
 
-    if(token.type === 'IDENTIFIER'){
-        let operand = {
-            kind: 'addr',
-            value: token.value
-        }
-        instruction.operands.push(operand);
-        isa_lookup_val += 'addr';
+    if (token.type === 'IDENTIFIER') {
+        instruction.operands.push({ kind: 'addr', value: token.value });
+        isa_lookup_val += ' addr';
     }
+
     return isa_lookup_val;
 }
