@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8-Bit CPU Emulator</title>
+  <link rel="stylesheet" href="../styleSheets/styleEmulator.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1 class="app-title">Trace8</h1>
+  </header>
+
+  <main class="workbench">
+
+    <!-- ============ LEFT: EDITOR ============ -->
+    <section class="panel editor-panel">
+      <div class="panel-heading">
+        <span>Assembly</span>
+        <span id="editor-status" class="status-chip status-chip--idle">idle</span>
+      </div>
+
+      <div class="editor-wrap">
+        <div id="line-numbers" class="line-numbers">1</div>
+        <textarea
+          id="editor"
+          class="editor"
+          spellcheck="false"
+          placeholder="    MOV A, 3&#10;LOOP:&#10;    DEC A&#10;    JNZ LOOP&#10;    HLT"
+        ></textarea>
+      </div>
+
+      <div id="editor-error" class="editor-error" hidden></div>
+
+      <!-- ============ CONTROLS ============ -->
+      <div class="controls">
+        <button id="btn-run" class="btn btn--primary" type="button">Run</button>
+        <button id="btn-pause" class="btn" type="button" disabled>Pause</button>
+        <button id="btn-step" class="btn" type="button">Step</button>
+        <button id="btn-reset" class="btn btn--ghost" type="button">Reset</button>
+
+        <div class="speed-control">
+          <label for="speed">Speed</label>
+          <input type="range" id="speed" min="1" max="10" value="5">
+        </div>
+      </div>
+
+
+      <div class="panel-heading"><span>Execution trace</span></div>
+      <div id="trace" class="trace"></div>
+    </section>
+
+    <!-- ============ RIGHT: CPU STATE ============ -->
+    <aside class="panel cpu-panel">
+
+      <div class="panel-heading"><span>Registers</span></div>
+      <div class="registers" id="registers">
+        <div class="register-cell" data-register="A">
+          <span class="register-label">A</span>
+          <span class="register-value" id="reg-A">00</span>
+        </div>
+        <div class="register-cell" data-register="B">
+          <span class="register-label">B</span>
+          <span class="register-value" id="reg-B">00</span>
+        </div>
+        <div class="register-cell" data-register="PC">
+          <span class="register-label">PC</span>
+          <span class="register-value" id="reg-PC">00</span>
+        </div>
+        <div class="register-cell" data-register="SP">
+          <span class="register-label">SP</span>
+          <span class="register-value" id="reg-SP">FF</span>
+        </div>
+      </div>
+
+      <div class="panel-heading"><span>Flags</span></div>
+      <div class="flags" id="flags">
+        <div class="flag-cell" id="flag-Z">
+          <span class="flag-label">Z</span>
+          <span class="flag-value">0</span>
+        </div>
+        <div class="flag-cell" id="flag-C">
+          <span class="flag-label">C</span>
+          <span class="flag-value">0</span>
+        </div>
+      </div>
+
+      <div class="panel-heading"><span>Memory</span></div>
+      <div class="memory-grid" id="memory-grid">
+        <!-- 256 cells injected by ui/memory-view.js -->
+      </div>
+    </aside>
+
+  </main>
+
+  <footer class="app-footer">
+    <span>256 bytes &middot; 8-bit registers &middot; Von Neumann architecture</span>
+  </footer>
+
+  <script type="module" src="../src/app.js"></script>
+</body>
+</html>
