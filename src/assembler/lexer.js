@@ -65,7 +65,7 @@ export function tokenise(sourceString){
     if (instruction_Array.length > 0) {
         tokenised_Code.push(instruction_Array);
     }
-    console.log(tokenised_Code)
+    
     return tokenised_Code;
 }
 

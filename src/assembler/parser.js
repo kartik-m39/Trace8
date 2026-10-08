@@ -10,7 +10,7 @@ export function parse(tokenised_Code){
     first_pass(parsed_Code, tokenised_Code);
     second_pass(parsed_Code);
 
-    console.log(parsed_Code);
+   
     return parsed_Code;
 }
 

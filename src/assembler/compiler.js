@@ -28,6 +28,5 @@ export function compile(parsed_Code){
 
     });
     
-    console.log(memory);
     return memory;
 }
